@@ -33,6 +33,9 @@ var Primitive$1 = NODES$1.reduce((primitive, node) => {
   Node.displayName = `Primitive.${node}`;
   return { ...primitive, [node]: Node };
 }, {});
+function dispatchDiscreteCustomEvent(target, event) {
+  if (target) reactDomExports.flushSync(() => target.dispatchEvent(event));
+}
 var NODES = [
   "a",
   "button",
@@ -65,9 +68,6 @@ var Primitive = NODES.reduce((primitive, node) => {
   Node.displayName = `Primitive.${node}`;
   return { ...primitive, [node]: Node };
 }, {});
-function dispatchDiscreteCustomEvent(target, event) {
-  if (target) reactDomExports.flushSync(() => target.dispatchEvent(event));
-}
 export {
   Primitive$1 as P,
   Primitive as a,

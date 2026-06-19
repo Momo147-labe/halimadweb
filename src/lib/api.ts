@@ -5,7 +5,7 @@
 const API_BASE =
   typeof import.meta !== 'undefined' && (import.meta as any).env?.VITE_API_URL
     ? (import.meta as any).env.VITE_API_URL
-    : 'http://localhost:3000';
+    : 'https://halimadbackend-2.onrender.com/';
 
 function getToken(): string | null {
   if (typeof window === 'undefined') return null;

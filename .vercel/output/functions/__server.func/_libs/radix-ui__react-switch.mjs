@@ -5,7 +5,7 @@ import { c as createContextScope } from "./radix-ui__react-context.mjs";
 import { u as useControllableState } from "./@radix-ui/react-use-controllable-state+[...].mjs";
 import { u as usePrevious } from "./radix-ui__react-use-previous.mjs";
 import { u as useSize } from "./radix-ui__react-use-size.mjs";
-import { a as Primitive } from "./radix-ui__react-primitive.mjs";
+import { P as Primitive } from "./radix-ui__react-primitive.mjs";
 var SWITCH_NAME = "Switch";
 var [createSwitchContext] = createContextScope(SWITCH_NAME);
 var [SwitchProvider, useSwitchContext] = createSwitchContext(SWITCH_NAME);

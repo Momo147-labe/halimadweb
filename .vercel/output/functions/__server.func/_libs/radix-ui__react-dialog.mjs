@@ -8,7 +8,7 @@ import { D as DismissableLayer } from "./@radix-ui/react-dismissable-layer+[...]
 import { F as FocusScope } from "./radix-ui__react-focus-scope.mjs";
 import { P as Portal$1 } from "./radix-ui__react-portal.mjs";
 import { P as Presence } from "./radix-ui__react-presence.mjs";
-import { a as Primitive } from "./radix-ui__react-primitive.mjs";
+import { P as Primitive } from "./radix-ui__react-primitive.mjs";
 import { u as useFocusGuards } from "./radix-ui__react-focus-guards.mjs";
 import { R as ReactRemoveScroll } from "./react-remove-scroll.mjs";
 import { h as hideOthers } from "./aria-hidden.mjs";
@@ -308,6 +308,7 @@ var DescriptionWarning = ({ contentRef, descriptionId }) => {
   return null;
 };
 var Root = Dialog;
+var Trigger = DialogTrigger;
 var Portal = DialogPortal;
 var Overlay = DialogOverlay;
 var Content = DialogContent;
@@ -320,6 +321,7 @@ export {
   Overlay as O,
   Portal as P,
   Root as R,
-  Title as T,
-  Close as a
+  Trigger as T,
+  Close as a,
+  Title as b
 };

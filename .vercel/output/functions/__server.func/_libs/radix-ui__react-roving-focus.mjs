@@ -4,7 +4,7 @@ import { c as createCollection } from "./radix-ui__react-collection.mjs";
 import { u as useComposedRefs } from "./radix-ui__react-compose-refs.mjs";
 import { c as createContextScope } from "./radix-ui__react-context.mjs";
 import { u as useId } from "./radix-ui__react-id.mjs";
-import { a as Primitive } from "./radix-ui__react-primitive.mjs";
+import { P as Primitive } from "./radix-ui__react-primitive.mjs";
 import { u as useCallbackRef } from "./@radix-ui/react-use-callback-ref+[...].mjs";
 import { u as useControllableState } from "./@radix-ui/react-use-controllable-state+[...].mjs";
 import { u as useDirection } from "./radix-ui__react-direction.mjs";

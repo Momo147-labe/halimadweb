@@ -1,6 +1,6 @@
 import { r as reactExports, j as jsxRuntimeExports } from "../react.mjs";
 import { c as composeEventHandlers } from "../radix-ui__primitive.mjs";
-import { a as Primitive, d as dispatchDiscreteCustomEvent } from "../radix-ui__react-primitive.mjs";
+import { P as Primitive, d as dispatchDiscreteCustomEvent } from "../radix-ui__react-primitive.mjs";
 import { u as useComposedRefs } from "../radix-ui__react-compose-refs.mjs";
 import { u as useCallbackRef } from "./react-use-callback-ref+[...].mjs";
 import { u as useEscapeKeydown } from "./react-use-escape-keydown+[...].mjs";

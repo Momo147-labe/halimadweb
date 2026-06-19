@@ -1,6 +1,6 @@
 import { r as reactExports, j as jsxRuntimeExports } from "./react.mjs";
 import { u as useComposedRefs } from "./radix-ui__react-compose-refs.mjs";
-import { a as Primitive } from "./radix-ui__react-primitive.mjs";
+import { P as Primitive } from "./radix-ui__react-primitive.mjs";
 import { u as useCallbackRef } from "./@radix-ui/react-use-callback-ref+[...].mjs";
 var AUTOFOCUS_ON_MOUNT = "focusScope.autoFocusOnMount";
 var AUTOFOCUS_ON_UNMOUNT = "focusScope.autoFocusOnUnmount";

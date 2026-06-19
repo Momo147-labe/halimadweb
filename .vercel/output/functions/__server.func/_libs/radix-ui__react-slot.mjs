@@ -345,8 +345,8 @@ function getElementRef(element) {
 }
 export {
   Slot as S,
-  createSlot$2 as a,
+  createSlot$3 as a,
   createSlot$1 as b,
-  createSlot$3 as c,
+  createSlot$2 as c,
   createSlot as d
 };

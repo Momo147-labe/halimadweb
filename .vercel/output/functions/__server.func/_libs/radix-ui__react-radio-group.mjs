@@ -2,7 +2,7 @@ import { r as reactExports, j as jsxRuntimeExports } from "./react.mjs";
 import { c as composeEventHandlers } from "./radix-ui__primitive.mjs";
 import { u as useComposedRefs } from "./radix-ui__react-compose-refs.mjs";
 import { c as createContextScope } from "./radix-ui__react-context.mjs";
-import { a as Primitive } from "./radix-ui__react-primitive.mjs";
+import { P as Primitive } from "./radix-ui__react-primitive.mjs";
 import { R as Root, I as Item, c as createRovingFocusGroupScope } from "./radix-ui__react-roving-focus.mjs";
 import { u as useControllableState } from "./@radix-ui/react-use-controllable-state+[...].mjs";
 import { u as useDirection } from "./radix-ui__react-direction.mjs";
