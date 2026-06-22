@@ -26,6 +26,7 @@ function RestaurantDashboard() {
   const restaurants = useRestaurants();
   const dishes = useDishes();
   const orders = useOrders();
+  const [createOpen, setCreateOpen] = useState(false); // ← moved before any conditional return
 
   useEffect(() => {
     if (user === null) { navigate({ to: "/login" }); return; }
@@ -35,7 +36,6 @@ function RestaurantDashboard() {
   if (!user) return null;
 
   const mine = restaurants.filter(r => r.ownerEmail === user.email);
-  const [createOpen, setCreateOpen] = useState(false);
 
   if (mine.length === 0) {
     return (
