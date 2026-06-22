@@ -63,6 +63,7 @@ export interface ApiUser {
   city: string;
   role: 'admin' | 'restaurant' | 'ambassadeur' | 'livreur' | 'client';
   status: 'en_attente' | 'approuve' | 'suspendu';
+  refCode?: string;
 }
 
 export interface AuthResponse {

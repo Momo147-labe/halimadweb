@@ -7,7 +7,7 @@ import { Search, MapPin, Clock } from "lucide-react";
 type Search = { ref?: string };
 
 export const Route = createFileRoute("/restaurants/")({
-  head: () => ({ meta: [{ title: "Restaurants à Labé — HaliMad" }] }),
+  head: () => ({ meta: [{ title: "Boutiques à Labé — HaliMad" }] }),
   validateSearch: (s: Record<string, unknown>): Search => ({
     ref: typeof s.ref === "string" ? s.ref : undefined,
   }),
@@ -36,7 +36,7 @@ function Restaurants() {
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">
-      <h1 className="text-3xl font-bold">Restaurants à Labé</h1>
+      <h1 className="text-3xl font-bold">Boutiques à Labé</h1>
       {ref && (
         <p className="mt-1 text-sm text-muted-foreground">
           Vous arrivez via l'ambassadeur <span className="font-medium text-foreground">{ref}</span>.
@@ -44,7 +44,7 @@ function Restaurants() {
       )}
       <div className="relative mt-4 max-w-md">
         <Search className="pointer-events-none absolute left-3 top-3 size-4 text-muted-foreground" />
-        <Input value={q} onChange={e => setQ(e.target.value)} placeholder="Rechercher un restaurant…" className="pl-9 h-11" />
+        <Input value={q} onChange={e => setQ(e.target.value)} placeholder="Rechercher une boutique…" className="pl-9 h-11" />
       </div>
 
       <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -61,7 +61,7 @@ function Restaurants() {
               <div className="p-4">
                 <div className="flex items-center justify-between">
                   <div className="font-semibold">{r.name}</div>
-                  <span className="text-xs text-muted-foreground">{count} plats</span>
+                  <span className="text-xs text-muted-foreground">{count} produits</span>
                 </div>
                 <div className="mt-1 line-clamp-2 text-sm text-muted-foreground">{r.description}</div>
                 <div className="mt-2 flex items-center justify-between text-xs text-muted-foreground">
@@ -77,7 +77,7 @@ function Restaurants() {
         })}
         {filtered.length === 0 && (
           <div className="col-span-full rounded-xl border border-dashed p-8 text-center text-muted-foreground">
-            Aucun restaurant disponible.
+            Aucune boutique disponible.
           </div>
         )}
       </div>

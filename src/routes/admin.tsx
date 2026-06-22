@@ -12,7 +12,7 @@ import { Switch } from "@/components/ui/switch";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import {
   Check, X, MessageCircle, Trash2, Settings as SettingsIcon,
-  Users as UsersIcon, UtensilsCrossed, Bike, Megaphone, ShoppingBag, Plus, Pencil,
+  Users as UsersIcon, UtensilsCrossed, Bike, Megaphone, ShoppingBag, Plus, Pencil, Store,
 } from "lucide-react";
 import { toast } from "sonner";
 import { ImageUpload } from "@/components/ImageUpload";
@@ -38,7 +38,7 @@ function Admin() {
 
   const tabs: { k: Tab; label: string; icon: any }[] = [
     { k: "vue", label: "Vue d'ensemble", icon: ShoppingBag },
-    { k: "restaurants", label: "Restaurants", icon: UtensilsCrossed },
+    { k: "restaurants", label: "Boutiques", icon: Store },
     { k: "ambassadeurs", label: "Ambassadeurs", icon: Megaphone },
     { k: "livreurs", label: "Livreurs", icon: Bike },
     { k: "commandes", label: "Commandes", icon: UsersIcon },
@@ -49,7 +49,7 @@ function Admin() {
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">
       <h1 className="text-3xl font-bold">Tableau de bord Admin</h1>
-      <p className="mt-1 text-muted-foreground">Pilotez restaurants, ambassadeurs, livreurs et commissions HaliMad.</p>
+      <p className="mt-1 text-muted-foreground">Pilotez boutiques, ambassadeurs, livreurs et commissions HaliMad.</p>
 
       <div className="mt-6 flex flex-wrap gap-1 border-b">
         {tabs.map(t => (
@@ -80,7 +80,7 @@ function Overview() {
   const totalCommission = orders.reduce((s, o) => s + Math.round(o.totalGNF * o.commissionHalimadPct / 100), 0);
 
   const cards = [
-    { label: "Restaurants", value: restaurants.length },
+    { label: "Boutiques", value: restaurants.length },
     { label: "Ambassadeurs", value: users.filter(u => u.role === "ambassadeur").length },
     { label: "Livreurs", value: users.filter(u => u.role === "livreur").length },
     { label: "Clients", value: users.filter(u => u.role === "client").length },
@@ -140,13 +140,13 @@ function RestaurantsTab() {
                   <Link to="/restaurants/$id" params={{ id: r.id }} className="font-semibold hover:underline">{r.name}</Link>
                   <div className="text-xs text-muted-foreground">{r.address} · {r.phone}</div>
                   <div className="mt-1 flex flex-wrap gap-3 text-xs text-muted-foreground">
-                    <span>{dishCount} plats</span>
+                    <span>{dishCount} produits</span>
                     <span>{orderCount} commandes</span>
                     <span>CA : <span className="font-semibold text-foreground">{formatGNF(ca)}</span></span>
                   </div>
                 </div>
                 <div className="flex flex-wrap items-center gap-1">
-                  <Button size="sm" variant="secondary" onClick={() => setMenuRestaurant(r)}>Menu</Button>
+                  <Button size="sm" variant="secondary" onClick={() => setMenuRestaurant(r)}>Produits</Button>
                   <Button size="sm" variant="outline" onClick={() => setEditRestaurant(r)}>Modifier</Button>
                   {r.status !== "approuve" && <Button size="sm" onClick={() => setStatus(r.id, "approuve")}><Check className="size-4" /> Approuver</Button>}
                   {r.status === "approuve" && <Button size="sm" variant="outline" onClick={() => setStatus(r.id, "suspendu")}>Suspendre</Button>}
@@ -165,7 +165,7 @@ function RestaurantsTab() {
 
   return <>
     <div className="mt-6 flex justify-end">
-      <Button onClick={() => setCreateOpen(true)}><Plus className="size-4 mr-1" /> Nouveau restaurant</Button>
+      <Button onClick={() => setCreateOpen(true)}><Plus className="size-4 mr-1" /> Nouvelle boutique</Button>
     </div>
     
     {createOpen && <RestaurantFormAdmin onClose={() => setCreateOpen(false)} />}
@@ -205,12 +205,12 @@ function RestaurantFormAdmin({ onClose, restaurant }: { onClose: () => void; res
   return (
     <Dialog open onOpenChange={onClose}>
       <DialogContent className="max-w-md">
-        <DialogHeader><DialogTitle>{restaurant ? "Modifier" : "Créer"} un restaurant</DialogTitle></DialogHeader>
+        <DialogHeader><DialogTitle>{restaurant ? "Modifier" : "Créer"} une boutique</DialogTitle></DialogHeader>
         <div className="space-y-3 max-h-[60vh] overflow-y-auto pr-1 text-left">
           <div>
-            <Label>Propriétaire (restaurateur)</Label>
+            <Label>Propriétaire (Boutique)</Label>
             <select value={ownerEmail} onChange={e => setOwnerEmail(e.target.value)} className="mt-1 w-full rounded-md border bg-background px-3 py-2 text-sm">
-              <option value="">Sélectionnez un restaurateur (optionnel)</option>
+              <option value="">Sélectionnez un propriétaire (optionnel)</option>
               {users.map(u => <option key={u.email} value={u.email}>{u.name} ({u.email})</option>)}
             </select>
           </div>
@@ -219,7 +219,7 @@ function RestaurantFormAdmin({ onClose, restaurant }: { onClose: () => void; res
           <div><Label>Téléphone / WhatsApp</Label><Input value={phone} onChange={e => setPhone(e.target.value)} /></div>
           <div><Label>Adresse (Labé)</Label><Input value={address} onChange={e => setAddress(e.target.value)} /></div>
           <div><Label>Horaires</Label><Input value={hours} onChange={e => setHours(e.target.value)} /></div>
-          <div><Label>URL image de couverture</Label><Input value={imageUrl} onChange={e => setImageUrl(e.target.value)} /></div>
+          <div><Label>Image de couverture</Label><ImageUpload value={imageUrl} onChange={setImageUrl} /></div>
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={onClose}>Annuler</Button>
@@ -235,7 +235,7 @@ function MenuManagerAdmin({ restaurant, onClose }: { restaurant: Restaurant; onC
     <Dialog open onOpenChange={onClose}>
       <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-left">Menu de : {restaurant.name}</DialogTitle>
+          <DialogTitle className="text-left">Produits de : {restaurant.name}</DialogTitle>
         </DialogHeader>
         <div className="mt-2 text-left">
           <DishManagerAdmin restaurant={restaurant} />
@@ -257,8 +257,8 @@ function DishManagerAdmin({ restaurant }: { restaurant: Restaurant }) {
   return (
     <div className="mt-4">
       <div className="flex items-center justify-between">
-        <h3 className="font-semibold text-sm">Plats ({dishes.length})</h3>
-        <Button size="sm" onClick={() => { setEdit(null); setOpen(true); }}><Plus className="size-4 mr-1" /> Ajouter un plat</Button>
+        <h3 className="font-semibold text-sm">Produits ({dishes.length})</h3>
+        <Button size="sm" onClick={() => { setEdit(null); setOpen(true); }}><Plus className="size-4 mr-1" /> Ajouter un produit</Button>
       </div>
       <div className="mt-2 grid gap-2 sm:grid-cols-2 max-h-[45vh] overflow-y-auto pr-1">
         {dishes.length === 0 && <div className="col-span-full rounded-lg border border-dashed p-4 text-sm text-muted-foreground text-center">Aucun plat dans ce restaurant.</div>}
@@ -286,18 +286,29 @@ function DishManagerAdmin({ restaurant }: { restaurant: Restaurant }) {
 }
 
 function DishFormAdmin({ restaurantId, dish, onClose }: { restaurantId: string; dish: Dish | null; onClose: () => void }) {
+  const settings = useSettings();
   const [name, setName] = useState(dish?.name ?? "");
   const [description, setDescription] = useState(dish?.description ?? "");
+  const [priceWholesale, setPriceWholesale] = useState(String(dish?.priceWholesaleGNF ?? ""));
   const [price, setPrice] = useState(String(dish?.priceGNF ?? ""));
   const [imageUrl, setImageUrl] = useState(dish?.imageUrl ?? "");
 
+  useEffect(() => {
+    const pw = Number(priceWholesale);
+    if (!isNaN(pw) && pw > 0 && settings.margeHalimadPct !== undefined) {
+      setPrice(String(pw + Math.round(pw * settings.margeHalimadPct / 100)));
+    }
+  }, [priceWholesale, settings.margeHalimadPct]);
+
   const submit = async () => {
     const p = Number(price);
+    const pw = priceWholesale ? Number(priceWholesale) : undefined;
     if (!name) return toast.error("Nom requis");
-    if (isNaN(p) || p <= 0) return toast.error("Prix invalide");
+    if (isNaN(p) || p <= 0) return toast.error("Prix détail invalide");
+    if (pw !== undefined && (isNaN(pw) || pw <= 0)) return toast.error("Prix en gros invalide");
     const id = dish?.id ?? `d_${Date.now()}`;
     const data = {
-      id, restaurantId, name, description, priceGNF: p, imageUrl,
+      id, restaurantId, name, description, priceGNF: p, priceWholesaleGNF: pw, imageUrl,
       available: dish?.available ?? true, createdAt: dish?.createdAt ?? Date.now(),
     };
     try {
@@ -312,12 +323,17 @@ function DishFormAdmin({ restaurantId, dish, onClose }: { restaurantId: string; 
   return (
     <Dialog open onOpenChange={onClose}>
       <DialogContent className="max-w-md">
-        <DialogHeader><DialogTitle>{dish ? "Modifier" : "Ajouter"} un plat</DialogTitle></DialogHeader>
+        <DialogHeader><DialogTitle>{dish ? "Modifier" : "Ajouter"} un produit</DialogTitle></DialogHeader>
         <div className="space-y-3 text-left">
-          <div><Label>Image du plat</Label><ImageUpload value={imageUrl} onChange={setImageUrl} /></div>
+          <div><Label>Image du produit</Label><ImageUpload value={imageUrl} onChange={setImageUrl} /></div>
           <div><Label>Nom</Label><Input value={name} onChange={e => setName(e.target.value)} /></div>
           <div><Label>Description</Label><Textarea rows={2} value={description} onChange={e => setDescription(e.target.value)} /></div>
-          <div><Label>Prix (GNF)</Label><Input type="number" value={price} onChange={e => setPrice(e.target.value)} /></div>
+          <div><Label>Prix en Gros (GNF) - Optionnel</Label><Input type="number" value={priceWholesale} onChange={e => setPriceWholesale(e.target.value)} /></div>
+          <div>
+            <Label>Prix Détail (GNF)</Label>
+            <Input type="number" value={price} onChange={e => setPrice(e.target.value)} />
+            {priceWholesale && <div className="text-xs text-muted-foreground mt-1">Suggéré selon la marge du site ({settings.margeHalimadPct}%), modifiable.</div>}
+          </div>
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={onClose}>Annuler</Button>
@@ -364,7 +380,7 @@ function UsersTab() {
             <tr className="border-b bg-muted/50 font-medium">
               <th className="p-3">Nom</th>
               <th className="p-3">Email</th>
-              <th className="p-3">WhatsApp</th>
+              <th className="p-3">WhatsApp / Réf.</th>
               <th className="p-3">Rôle</th>
               <th className="p-3">Statut</th>
             </tr>
@@ -374,7 +390,10 @@ function UsersTab() {
               <tr key={u.id || u.email}>
                 <td className="p-3 font-semibold">{u.name}</td>
                 <td className="p-3 text-muted-foreground">{u.email}</td>
-                <td className="p-3 text-muted-foreground">{u.whatsapp || '—'}</td>
+                <td className="p-3 text-muted-foreground">
+                  <div>{u.whatsapp || '—'}</div>
+                  {u.role === 'ambassadeur' && u.refCode && <div className="text-xs font-mono text-primary mt-1">{u.refCode}</div>}
+                </td>
                 <td className="p-3">
                   <select
                     value={u.role}
@@ -586,22 +605,28 @@ function ContactSection({ settings }: { settings: ReturnType<typeof useSettings>
 }
 
 function CommissionsSection({ settings }: { settings: ReturnType<typeof useSettings> }) {
+  const [margeHM, setMargeHM] = useState(String(settings.margeHalimadPct ?? 0));
   const [comHM, setComHM] = useState(String(settings.commissionHalimadPct));
   const [comAmb, setComAmb] = useState(String(settings.commissionAmbassadeurPct));
   const [feeLiv, setFeeLiv] = useState(String(settings.feeLivreurGNF));
   const save = async () => {
-    const a = Number(comHM), b = Number(comAmb), c = Number(feeLiv);
+    const m = Number(margeHM), a = Number(comHM), b = Number(comAmb), c = Number(feeLiv);
+    if (isNaN(m) || m < 0 || m > 100) return toast.error("Marge HaliMad invalide");
     if (isNaN(a) || a < 0 || a > 100) return toast.error("Commission HaliMad invalide");
     if (isNaN(b) || b < 0 || b > 100) return toast.error("Commission ambassadeur invalide");
     if (isNaN(c) || c < 0) return toast.error("Forfait livreur invalide");
-    try { await store.updateSettings({ commissionHalimadPct: a, commissionAmbassadeurPct: b, feeLivreurGNF: c }); toast.success("Enregistré"); }
+    try { await store.updateSettings({ margeHalimadPct: m, commissionHalimadPct: a, commissionAmbassadeurPct: b, feeLivreurGNF: c }); toast.success("Enregistré"); }
     catch (e: any) { toast.error(e.message); }
   };
   return (
-    <Section title="Commissions">
+    <Section title="Marges & Commissions">
+      <div className="grid grid-cols-2 gap-3 mb-3">
+        <div><Label>Marge Vente (%)</Label><Input type="number" value={margeHM} onChange={e => setMargeHM(e.target.value)} /></div>
+        <div className="text-xs text-muted-foreground self-end pb-2">Marge sur le prix en gros de la boutique</div>
+      </div>
       <div className="grid grid-cols-2 gap-3">
-        <div><Label>HaliMad (%)</Label><Input type="number" value={comHM} onChange={e => setComHM(e.target.value)} /></div>
-        <div><Label>Ambassadeur (%)</Label><Input type="number" value={comAmb} onChange={e => setComAmb(e.target.value)} /></div>
+        <div><Label>Comm. HaliMad (%)</Label><Input type="number" value={comHM} onChange={e => setComHM(e.target.value)} /></div>
+        <div><Label>Comm. Ambassadeur (%)</Label><Input type="number" value={comAmb} onChange={e => setComAmb(e.target.value)} /></div>
       </div>
       <div><Label>Forfait livreur / commande (GNF)</Label><Input type="number" value={feeLiv} onChange={e => setFeeLiv(e.target.value)} /></div>
       <Button onClick={save}>Enregistrer</Button>

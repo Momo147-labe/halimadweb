@@ -22,6 +22,7 @@ export interface User {
   whatsapp?: string;
   city?: string;
   status: ApprovalStatus;
+  refCode?: string;          // ambassador unique ref code
   id?: string;               // backend user id
 }
 
@@ -45,6 +46,7 @@ export interface Dish {
   name: string;
   description: string;
   priceGNF: number;
+  priceWholesaleGNF?: number;
   imageUrl: string;
   available: boolean;
   createdAt: number;
@@ -93,6 +95,7 @@ export interface Settings {
   messageAuto: string;              // template {plat} {qty} {total} {adresse} {client} {phone} {code}
   feeLivreurGNF: number;
   commissionHalimadPct: number;
+  margeHalimadPct: number;
   commissionAmbassadeurPct: number;
   orangeMoneyNumber: string;
   supportWhatsapp: string;
@@ -118,6 +121,7 @@ const DEFAULT_SETTINGS: Settings = {
   messageAuto: "Bonjour HaliMad, je souhaite commander : {plat} x{qty}. Total : {total}. Adresse : {adresse}. Client : {client} ({phone}). Code: {code}",
   feeLivreurGNF: 10000,
   commissionHalimadPct: 10,
+  margeHalimadPct: 20,
   commissionAmbassadeurPct: 5,
   orangeMoneyNumber: "620000000",
   supportWhatsapp: "224620000000",
@@ -155,6 +159,7 @@ function apiUserToUser(u: ApiUser): User {
     whatsapp: u.whatsapp,
     city: u.city ?? "Labé",
     status: u.status as ApprovalStatus,
+    refCode: u.refCode,
   };
 }
 
@@ -498,7 +503,7 @@ export async function compressImage(
   return { dataUrl: out, size };
 }
 
-export function ambassadorShareLink(email: string) {
-  if (typeof window === "undefined") return `?ref=${encodeURIComponent(email)}`;
-  return `${window.location.origin}/restaurants?ref=${encodeURIComponent(email)}`;
+export function ambassadorShareLink(refCode: string) {
+  if (typeof window === "undefined") return `?ref=${encodeURIComponent(refCode)}`;
+  return `${window.location.origin}/restaurants?ref=${encodeURIComponent(refCode)}`;
 }

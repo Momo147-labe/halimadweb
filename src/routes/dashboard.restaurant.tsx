@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import {
-  store, useSession, useRestaurants, useDishes, useOrders,
+  store, useSession, useRestaurants, useDishes, useOrders, useSettings,
   formatGNF, generateCode, type Restaurant, type Dish,
 } from "@/lib/store";
 import { Button } from "@/components/ui/button";
@@ -16,7 +16,7 @@ import { toast } from "sonner";
 import { OrderTimeline } from "@/components/OrderTimeline";
 
 export const Route = createFileRoute("/dashboard/restaurant")({
-  head: () => ({ meta: [{ title: "Mon restaurant — HaliMad" }] }),
+  head: () => ({ meta: [{ title: "Ma boutique — HaliMad" }] }),
   component: RestaurantDashboard,
 });
 
@@ -40,9 +40,9 @@ function RestaurantDashboard() {
   if (mine.length === 0) {
     return (
       <div className="mx-auto max-w-md px-4 py-12 text-center">
-        <h1 className="text-2xl font-bold">Mon restaurant</h1>
-        <p className="mt-2 text-muted-foreground">Vous n'avez pas encore enregistré de restaurant.</p>
-        <Button className="mt-4" onClick={() => setCreateOpen(true)}><Plus className="size-4" /> Créer mon restaurant</Button>
+        <h1 className="text-2xl font-bold">Ma boutique</h1>
+        <p className="mt-2 text-muted-foreground">Vous n'avez pas encore enregistré de boutique.</p>
+        <Button className="mt-4" onClick={() => setCreateOpen(true)}><Plus className="size-4" /> Créer ma boutique</Button>
         {createOpen && <RestaurantForm ownerEmail={user.email} onClose={() => setCreateOpen(false)} />}
       </div>
     );
@@ -52,10 +52,10 @@ function RestaurantDashboard() {
     <div className="mx-auto max-w-5xl px-4 py-8">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="text-3xl font-bold">Mon restaurant</h1>
-          <p className="mt-1 text-sm text-muted-foreground">Gérez vos plats et suivez les commandes.</p>
+          <h1 className="text-3xl font-bold">Ma boutique</h1>
+          <p className="mt-1 text-sm text-muted-foreground">Gérez vos produits et suivez les commandes.</p>
         </div>
-        <Button onClick={() => setCreateOpen(true)}><Plus className="size-4" /> Nouveau restaurant</Button>
+        <Button onClick={() => setCreateOpen(true)}><Plus className="size-4" /> Nouvelle boutique</Button>
       </div>
       {createOpen && <RestaurantForm ownerEmail={user.email} onClose={() => setCreateOpen(false)} />}
 
@@ -70,7 +70,7 @@ function RestaurantDashboard() {
               <div className="flex-1">
                 <div className="font-bold text-lg">{r.name} <span className={`ml-2 rounded px-2 py-0.5 text-xs ${r.status === "approuve" ? "bg-success/15 text-success" : "bg-warning/20"}`}>{r.status}</span></div>
                 <div className="text-sm text-muted-foreground">{r.address}</div>
-                <div className="mt-1 text-xs text-muted-foreground">{ds.length} plats · {os.length} commandes · CA : {formatGNF(ca)}</div>
+                <div className="mt-1 text-xs text-muted-foreground">{ds.length} produits · {os.length} commandes · CA : {formatGNF(ca)}</div>
               </div>
             </div>
 
@@ -125,21 +125,21 @@ function RestaurantForm({ ownerEmail, onClose, restaurant }: { ownerEmail: strin
       createdAt: restaurant?.createdAt ?? Date.now(),
     };
     if (restaurant) store.updateRestaurant(id, data); else store.addRestaurant(data);
-    toast.success(restaurant ? "Restaurant modifié" : "Restaurant créé (en attente de validation par HaliMad)");
+    toast.success(restaurant ? "Boutique modifiée" : "Boutique créée (en attente de validation par HaliMad)");
     onClose();
   };
 
   return (
     <Dialog open onOpenChange={onClose}>
       <DialogContent className="max-w-md">
-        <DialogHeader><DialogTitle>{restaurant ? "Modifier" : "Créer"} mon restaurant</DialogTitle></DialogHeader>
+        <DialogHeader><DialogTitle>{restaurant ? "Modifier" : "Créer"} ma boutique</DialogTitle></DialogHeader>
         <div className="space-y-3">
+          <div><Label>Image de couverture</Label><ImageUpload value={imageUrl} onChange={setImageUrl} /></div>
           <div><Label>Nom</Label><Input value={name} onChange={e => setName(e.target.value)} /></div>
           <div><Label>Description</Label><Textarea rows={2} value={description} onChange={e => setDescription(e.target.value)} /></div>
           <div><Label>Téléphone / WhatsApp</Label><Input value={phone} onChange={e => setPhone(e.target.value)} /></div>
           <div><Label>Adresse (Labé)</Label><Input value={address} onChange={e => setAddress(e.target.value)} /></div>
           <div><Label>Horaires</Label><Input value={hours} onChange={e => setHours(e.target.value)} /></div>
-          <div><Label>URL image de couverture</Label><Input value={imageUrl} onChange={e => setImageUrl(e.target.value)} /></div>
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={onClose}>Annuler</Button>
@@ -159,17 +159,20 @@ function DishManager({ restaurant }: { restaurant: Restaurant }) {
   return (
     <div className="mt-4">
       <div className="flex items-center justify-between">
-        <h3 className="font-semibold">Menu ({dishes.length})</h3>
-        <Button size="sm" onClick={() => { setEdit(null); setOpen(true); }}><Plus className="size-4" /> Plat</Button>
+        <h3 className="font-semibold">Produits ({dishes.length})</h3>
+        <Button size="sm" onClick={() => { setEdit(null); setOpen(true); }}><Plus className="size-4" /> Produit</Button>
       </div>
       <div className="mt-2 grid gap-2 sm:grid-cols-2">
-        {dishes.length === 0 && <div className="col-span-full rounded-lg border border-dashed p-4 text-sm text-muted-foreground">Ajoutez votre premier plat.</div>}
+        {dishes.length === 0 && <div className="col-span-full rounded-lg border border-dashed p-4 text-sm text-muted-foreground">Ajoutez votre premier produit.</div>}
         {dishes.map(d => (
           <div key={d.id} className="flex gap-3 rounded-lg border p-2">
             <img src={d.imageUrl} alt="" className="h-16 w-16 rounded object-cover" />
             <div className="flex-1">
               <div className="font-semibold text-sm">{d.name}</div>
-              <div className="font-bold text-primary text-sm">{formatGNF(d.priceGNF)}</div>
+              <div className="flex gap-2">
+                <span className="font-bold text-primary text-sm">{formatGNF(d.priceGNF)} (Détail)</span>
+                {d.priceWholesaleGNF && <span className="font-semibold text-amber-600 text-sm">{formatGNF(d.priceWholesaleGNF)} (Gros)</span>}
+              </div>
               <div className="mt-1 flex items-center gap-2">
                 <Switch checked={d.available} onCheckedChange={(v) => store.updateDish(d.id, { available: v })} />
                 <span className="text-xs text-muted-foreground">{d.available ? "Disponible" : "Indispo"}</span>
@@ -188,23 +191,35 @@ function DishManager({ restaurant }: { restaurant: Restaurant }) {
 }
 
 function DishForm({ restaurantId, dish, onClose }: { restaurantId: string; dish: Dish | null; onClose: () => void }) {
+  const settings = useSettings();
   const [name, setName] = useState(dish?.name ?? "");
   const [description, setDescription] = useState(dish?.description ?? "");
+  const [priceWholesale, setPriceWholesale] = useState(String(dish?.priceWholesaleGNF ?? ""));
   const [price, setPrice] = useState(String(dish?.priceGNF ?? ""));
   const [imageUrl, setImageUrl] = useState(dish?.imageUrl ?? "");
 
+  useEffect(() => {
+    const pw = Number(priceWholesale);
+    if (!isNaN(pw) && pw > 0 && settings.margeHalimadPct !== undefined) {
+      setPrice(String(pw + Math.round(pw * settings.margeHalimadPct / 100)));
+    }
+  }, [priceWholesale, settings.margeHalimadPct]);
+
   const submit = async () => {
     const p = Number(price);
+    const pw = priceWholesale ? Number(priceWholesale) : undefined;
     if (!name) return toast.error("Nom requis");
-    if (isNaN(p) || p <= 0) return toast.error("Prix invalide");
+    if (isNaN(p) || p <= 0) return toast.error("Prix détail invalide");
+    if (pw !== undefined && (isNaN(pw) || pw <= 0)) return toast.error("Prix en gros invalide");
+    
     const id = dish?.id ?? `d_${Date.now()}`;
     const data: Dish = {
-      id, restaurantId, name, description, priceGNF: p, imageUrl,
+      id, restaurantId, name, description, priceGNF: p, priceWholesaleGNF: pw, imageUrl,
       available: dish?.available ?? true, createdAt: dish?.createdAt ?? Date.now(),
     };
     try {
       if (dish) await store.updateDish(id, data); else await store.addDish(data);
-      toast.success(dish ? "Plat modifié" : "Plat ajouté");
+      toast.success(dish ? "Produit modifié" : "Produit ajouté");
       onClose();
     } catch (err: any) {
       toast.error(err?.message ?? "Erreur lors de la sauvegarde");
@@ -214,12 +229,17 @@ function DishForm({ restaurantId, dish, onClose }: { restaurantId: string; dish:
   return (
     <Dialog open onOpenChange={onClose}>
       <DialogContent className="max-w-md">
-        <DialogHeader><DialogTitle>{dish ? "Modifier" : "Ajouter"} un plat</DialogTitle></DialogHeader>
+        <DialogHeader><DialogTitle>{dish ? "Modifier" : "Ajouter"} un produit</DialogTitle></DialogHeader>
         <div className="space-y-3">
-          <div><Label>Image du plat</Label><ImageUpload value={imageUrl} onChange={setImageUrl} /></div>
+          <div><Label>Image du produit</Label><ImageUpload value={imageUrl} onChange={setImageUrl} /></div>
           <div><Label>Nom</Label><Input value={name} onChange={e => setName(e.target.value)} /></div>
           <div><Label>Description</Label><Textarea rows={2} value={description} onChange={e => setDescription(e.target.value)} /></div>
-          <div><Label>Prix (GNF)</Label><Input type="number" value={price} onChange={e => setPrice(e.target.value)} /></div>
+          <div><Label>Prix en Gros (GNF) - Optionnel</Label><Input type="number" value={priceWholesale} onChange={e => setPriceWholesale(e.target.value)} /></div>
+          <div>
+            <Label>Prix Détail (GNF)</Label>
+            <Input type="number" value={price} onChange={e => setPrice(e.target.value)} />
+            {priceWholesale && <div className="text-xs text-muted-foreground mt-1">Suggéré selon la marge du site ({settings.margeHalimadPct}%), modifiable.</div>}
+          </div>
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={onClose}>Annuler</Button>

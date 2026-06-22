@@ -25,7 +25,7 @@ function AmbassadorDashboard() {
   useEffect(() => {
     if (user === null) { navigate({ to: "/login" }); return; }
     if (user && user.role !== "ambassadeur" && user.role !== "admin") navigate({ to: "/" });
-    if (user) setLink(ambassadorShareLink(user.email));
+    if (user) setLink(ambassadorShareLink(user.refCode || user.email));
   }, [user, navigate]);
 
   if (!user) return null;
@@ -70,11 +70,11 @@ function AmbassadorDashboard() {
       </section>
 
       <section className="mt-6">
-        <h2 className="font-semibold">Plats à partager</h2>
+        <h2 className="font-semibold">Produits à partager</h2>
         <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {dishes.filter(d => d.available).slice(0, 9).map(d => {
             const r = restaurants.find(x => x.id === d.restaurantId);
-            const dishLink = `${link.split("?")[0]}/${d.restaurantId}?ref=${encodeURIComponent(user.email)}`;
+            const dishLink = `${link.split("?")[0]}/${d.restaurantId}?ref=${encodeURIComponent(user.refCode || user.email)}`;
             return (
               <div key={d.id} className="overflow-hidden rounded-xl border bg-card">
                 <img src={d.imageUrl} alt={d.name} className="aspect-[4/3] w-full object-cover" />

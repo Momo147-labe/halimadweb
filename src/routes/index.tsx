@@ -8,8 +8,8 @@ import { UtensilsCrossed, Search, MapPin, Bike, Megaphone, ArrowRight, Clock } f
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "HaliMad — Commandez votre repas à Labé" },
-      { name: "description", content: "Commandez vos repas auprès des restaurants partenaires à Labé. Livraison rapide par nos livreurs." },
+      { title: "HaliMad — Shopping et livraison à Labé" },
+      { name: "description", content: "Commandez vos produits auprès des boutiques partenaires à Labé. Livraison rapide par nos livreurs." },
     ],
   }),
   component: Home,
@@ -40,26 +40,26 @@ function Home() {
             <MapPin className="size-3" /> Disponible à Labé
           </div>
           <h1 className="mt-4 text-4xl font-bold tracking-tight sm:text-5xl">
-            Commandez votre repas <span className="text-primary">à Labé</span> en quelques clics
+            Faites votre shopping <span className="text-primary">à Labé</span> en quelques clics
           </h1>
           <p className="mx-auto mt-3 max-w-xl text-muted-foreground">
-            Restaurants partenaires, ambassadeurs étudiants, livraison rapide.
+            Boutiques partenaires, ambassadeurs étudiants, livraison rapide.
             Paiement cash ou Orange Money.
           </p>
           <div className="mx-auto mt-6 flex max-w-md items-center gap-2">
             <div className="relative flex-1">
               <Search className="pointer-events-none absolute left-3 top-3 size-4 text-muted-foreground" />
-              <Input value={q} onChange={e => setQ(e.target.value)} placeholder="Rechercher un restaurant ou un plat…" className="pl-9 h-11" />
+              <Input value={q} onChange={e => setQ(e.target.value)} placeholder="Rechercher une boutique ou un produit…" className="pl-9 h-11" />
             </div>
             <Button asChild size="lg"><Link to="/restaurants">Voir tout</Link></Button>
           </div>
         </div>
       </section>
 
-      {/* Restaurants populaires */}
+      {/* Boutiques populaires */}
       <section className="mx-auto max-w-6xl px-4 py-10">
         <div className="flex items-end justify-between">
-          <h2 className="text-2xl font-bold">Restaurants populaires</h2>
+          <h2 className="text-2xl font-bold">Boutiques populaires</h2>
           <Link to="/restaurants" className="text-sm text-primary hover:underline">Tout voir</Link>
         </div>
         <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -80,16 +80,16 @@ function Home() {
           ))}
           {filteredRestaurants.length === 0 && (
             <div className="col-span-full rounded-xl border border-dashed p-8 text-center text-muted-foreground">
-              Aucun restaurant ne correspond à votre recherche.
+              Aucune boutique ne correspond à votre recherche.
             </div>
           )}
         </div>
       </section>
 
-      {/* Menus du jour */}
+      {/* Produits populaires */}
       <section className="border-y bg-muted/30 py-10">
         <div className="mx-auto max-w-6xl px-4">
-          <h2 className="text-2xl font-bold">Menus du jour</h2>
+          <h2 className="text-2xl font-bold">Produits populaires</h2>
           <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {topDishes.map(d => {
               const r = restaurants.find(x => x.id === d.restaurantId);
@@ -115,9 +115,9 @@ function Home() {
         <h2 className="text-2xl font-bold text-center">Comment ça marche</h2>
         <div className="mt-6 grid gap-4 sm:grid-cols-3">
           {[
-            { n: 1, t: "Choisissez", d: "Parcourez les restaurants de Labé et leur menu du jour." },
+            { n: 1, t: "Choisissez", d: "Parcourez les boutiques de Labé et leurs produits." },
             { n: 2, t: "Commandez", d: "Renseignez votre adresse et payez en cash ou via Orange Money." },
-            { n: 3, t: "Recevez", d: "Un livreur HaliMad vous apporte votre repas rapidement." },
+            { n: 3, t: "Recevez", d: "Un livreur HaliMad vous apporte votre commande rapidement." },
           ].map(s => (
             <div key={s.n} className="rounded-xl border bg-card p-5 text-center">
               <div className="mx-auto grid size-10 place-items-center rounded-full bg-primary text-primary-foreground font-bold">{s.n}</div>
@@ -132,13 +132,13 @@ function Home() {
       <section className="bg-primary/5 py-12">
         <div className="mx-auto grid max-w-6xl gap-4 px-4 sm:grid-cols-2">
           <PartnerCard
-            icon={UtensilsCrossed} title="Devenir restaurant partenaire"
-            desc="Publiez votre menu, recevez des commandes et touchez plus de clients à Labé."
-            cta="Inscrire mon restaurant" to="/register"
+            icon={UtensilsCrossed} title="Devenir boutique partenaire"
+            desc="Publiez vos produits, recevez des commandes et touchez plus de clients à Labé."
+            cta="Inscrire ma boutique" to="/register"
           />
           <PartnerCard
             icon={Megaphone} title="Devenir ambassadeur HaliMad"
-            desc="Étudiants, jeunes : partagez les plats, gagnez une commission sur chaque commande."
+            desc="Étudiants, jeunes : partagez les produits, gagnez une commission sur chaque commande."
             cta="Devenir ambassadeur" to="/register"
           />
         </div>

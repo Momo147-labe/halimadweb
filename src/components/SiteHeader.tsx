@@ -28,12 +28,12 @@ export function SiteHeader() {
               </SheetHeader>
               <nav className="flex flex-col gap-4 text-sm">
                 <Link to="/" onClick={() => setOpen(false)} activeOptions={{ exact: true }} activeProps={{ className: "text-primary font-semibold" }}>Accueil</Link>
-                <Link to="/restaurants" onClick={() => setOpen(false)} activeProps={{ className: "text-primary font-semibold" }}>Restaurants</Link>
+                <Link to="/restaurants" onClick={() => setOpen(false)} activeProps={{ className: "text-primary font-semibold" }}>Boutiques</Link>
                 {user?.role === "client" && (
                   <Link to="/orders" onClick={() => setOpen(false)} activeProps={{ className: "text-primary font-semibold" }}>Mes commandes</Link>
                 )}
                 {user?.role === "restaurant" && (
-                  <Link to="/dashboard/restaurant" onClick={() => setOpen(false)} activeProps={{ className: "text-primary font-semibold" }}>Mon resto</Link>
+                  <Link to="/dashboard/restaurant" onClick={() => setOpen(false)} activeProps={{ className: "text-primary font-semibold" }}>Ma boutique</Link>
                 )}
                 {user?.role === "ambassadeur" && (
                   <Link to="/dashboard/ambassadeur" onClick={() => setOpen(false)} activeProps={{ className: "text-primary font-semibold" }}>Ambassadeur</Link>
@@ -52,19 +52,19 @@ export function SiteHeader() {
             <div className="grid h-9 w-9 place-items-center rounded-lg bg-primary text-primary-foreground font-bold">H</div>
           <div className="leading-tight">
             <div className="font-bold">HaliMad</div>
-            <div className="text-xs text-muted-foreground -mt-0.5 hidden sm:block">Repas livrés à Labé</div>
+            <div className="text-xs text-muted-foreground -mt-0.5 hidden sm:block">Shopping & Livraison à Labé</div>
           </div>
         </Link>
         </div>
 
         <nav className="hidden md:flex items-center gap-6 text-sm">
           <Link to="/" activeOptions={{ exact: true }} activeProps={{ className: "text-primary font-semibold" }}>Accueil</Link>
-          <Link to="/restaurants" activeProps={{ className: "text-primary font-semibold" }}>Restaurants</Link>
+          <Link to="/restaurants" activeProps={{ className: "text-primary font-semibold" }}>Boutiques</Link>
           {user?.role === "client" && (
             <Link to="/orders" activeProps={{ className: "text-primary font-semibold" }}>Mes commandes</Link>
           )}
           {user?.role === "restaurant" && (
-            <Link to="/dashboard/restaurant" activeProps={{ className: "text-primary font-semibold" }}>Mon resto</Link>
+            <Link to="/dashboard/restaurant" activeProps={{ className: "text-primary font-semibold" }}>Ma boutique</Link>
           )}
           {user?.role === "ambassadeur" && (
             <Link to="/dashboard/ambassadeur" activeProps={{ className: "text-primary font-semibold" }}>Ambassadeur</Link>
@@ -86,28 +86,28 @@ export function SiteHeader() {
           ) : (
             <>
               {user.role === "admin" && (
-                <Button asChild size="sm" variant="outline" className="hidden sm:inline-flex">
-                  <Link to="/admin"><ShieldCheck className="size-4" /> Admin</Link>
+                <Button asChild size="sm" variant="outline" className="inline-flex">
+                  <Link to="/admin"><ShieldCheck className="size-4" /><span className="hidden sm:inline ml-1">Admin</span></Link>
                 </Button>
               )}
               {user.role === "restaurant" && (
-                <Button asChild size="sm" variant="secondary" className="hidden sm:inline-flex">
-                  <Link to="/dashboard/restaurant"><UtensilsCrossed className="size-4" /> Mon resto</Link>
+                <Button asChild size="sm" variant="secondary" className="inline-flex">
+                  <Link to="/dashboard/restaurant"><Store className="size-4" /><span className="hidden sm:inline ml-1">Ma boutique</span></Link>
                 </Button>
               )}
               {user.role === "ambassadeur" && (
-                <Button asChild size="sm" variant="secondary" className="hidden sm:inline-flex">
-                  <Link to="/dashboard/ambassadeur"><Megaphone className="size-4" /> Ambassadeur</Link>
+                <Button asChild size="sm" variant="secondary" className="inline-flex">
+                  <Link to="/dashboard/ambassadeur"><Megaphone className="size-4" /><span className="hidden sm:inline ml-1">Ambassadeur</span></Link>
                 </Button>
               )}
               {user.role === "livreur" && (
-                <Button asChild size="sm" variant="secondary" className="hidden sm:inline-flex">
-                  <Link to="/dashboard/livreur"><Bike className="size-4" /> Livreur</Link>
+                <Button asChild size="sm" variant="secondary" className="inline-flex">
+                  <Link to="/dashboard/livreur"><Bike className="size-4" /><span className="hidden sm:inline ml-1">Livreur</span></Link>
                 </Button>
               )}
               {user.role === "client" && (
-                <Button asChild size="sm" variant="secondary" className="hidden sm:inline-flex">
-                  <Link to="/orders"><ShoppingBag className="size-4" /> Commandes</Link>
+                <Button asChild size="sm" variant="secondary" className="inline-flex">
+                  <Link to="/orders"><ShoppingBag className="size-4" /><span className="hidden sm:inline ml-1">Commandes</span></Link>
                 </Button>
               )}
               <span className="hidden md:inline text-sm text-muted-foreground">

@@ -11,12 +11,12 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { MapPin, Clock, Phone, Plus, Minus, ShoppingBag, CheckCircle2 } from "lucide-react";
+import { MapPin, Clock, Phone, Plus, Minus, ShoppingBag, CheckCircle2, Share2, Facebook, MessageCircle } from "lucide-react";
 import { toast } from "sonner";
 import { z } from "zod";
 
 export const Route = createFileRoute("/restaurants/$id")({
-  head: ({ params }) => ({ meta: [{ title: `Menu — HaliMad` }] }),
+  head: ({ params }) => ({ meta: [{ title: `Produits — HaliMad` }] }),
   component: RestaurantPage,
 });
 
@@ -53,14 +53,14 @@ function RestaurantPage() {
         </div>
       </div>
 
-      <h2 className="mt-8 text-xl font-bold">Menu ({dishes.filter(d => d.available).length} plats)</h2>
+      <h2 className="mt-8 text-xl font-bold">Produits ({dishes.filter(d => d.available).length})</h2>
       <div className="mt-3 grid gap-3 sm:grid-cols-2">
         {dishes.map(d => (
           <DishCard key={d.id} dish={d} restaurantName={restaurant.name} restaurantId={restaurant.id} />
         ))}
         {dishes.length === 0 && (
           <div className="col-span-full rounded-xl border border-dashed p-8 text-center text-muted-foreground">
-            Ce restaurant n'a pas encore publié de plat.
+            Cette boutique n'a pas encore publié de produit.
           </div>
         )}
       </div>
@@ -80,11 +80,17 @@ function DishCard({ dish, restaurantName, restaurantId }: { dish: Dish; restaura
         <div className="font-semibold">{dish.name}</div>
         <div className="line-clamp-2 text-xs text-muted-foreground">{dish.description}</div>
         <div className="mt-2 flex items-center justify-between">
-          <div className="font-bold text-primary">{formatGNF(dish.priceGNF)}</div>
+          <div className="flex flex-col">
+            <span className="font-bold text-primary">{formatGNF(dish.priceGNF)}</span>
+            {dish.priceWholesaleGNF && (
+              <span className="text-xs font-semibold text-amber-600">Gros : {formatGNF(dish.priceWholesaleGNF)}</span>
+            )}
+          </div>
           <Button size="sm" disabled={unavailable} onClick={() => setOpen(true)}>
             <ShoppingBag className="size-4" /> Commander
           </Button>
         </div>
+        {dish.priceWholesaleGNF && <ShareButtons dish={dish} />}
         {unavailable && <div className="mt-1 text-xs text-destructive">Indisponible</div>}
       </div>
       {open && (
@@ -95,6 +101,45 @@ function DishCard({ dish, restaurantName, restaurantId }: { dish: Dish; restaura
           onClose={() => setOpen(false)}
         />
       )}
+    </div>
+  );
+}
+
+function ShareButtons({ dish }: { dish: Dish }) {
+  const session = useSession();
+  if (!session || (session.role !== "ambassadeur" && session.role !== "admin")) return null;
+  const link = typeof window !== "undefined" && session.refCode ? `${window.location.origin}/restaurants/${dish.restaurantId}?ref=${session.refCode}` : "";
+  
+  if (!link) return null;
+
+  const shareNative = async () => {
+    const shareData = {
+      title: `Commandez ${dish.name}`,
+      text: `Découvrez ${dish.name} sur HaliMad !`,
+      url: link,
+    };
+    if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
+      try { await navigator.share(shareData); toast.success("Partagé avec succès !"); return; }
+      catch (e) { /* user aborted or error */ }
+    }
+    // Fallback to clipboard
+    navigator.clipboard.writeText(link);
+    toast.success("Lien copié");
+  };
+
+  const shareWA = () => {
+    const msg = `Commandez ${dish.name} sur HaliMad : ${link}`;
+    window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, "_blank");
+  };
+  const shareFB = () => {
+    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(link)}`, "_blank");
+  };
+  
+  return (
+    <div className="mt-3 flex gap-2">
+      <Button size="sm" variant="outline" className="flex-1 text-xs h-7" onClick={shareNative}><Share2 className="size-3 mr-1" /> Partager</Button>
+      <Button size="sm" variant="outline" className="flex-1 text-xs h-7" onClick={shareWA}><MessageCircle className="size-3 mr-1" /> WhatsApp</Button>
+      <Button size="sm" variant="outline" className="flex-1 text-xs h-7 hidden sm:inline-flex" onClick={shareFB}><Facebook className="size-3 mr-1" /> Facebook</Button>
     </div>
   );
 }
@@ -185,7 +230,7 @@ function OrderDialog({ dish, restaurantName, restaurantId, onClose }:
               Code : <span className="font-mono font-semibold text-foreground">{done}</span>
             </p>
             <p className="text-sm text-muted-foreground">
-              Le restaurant a été notifié. Vous pouvez suivre votre commande dans « Mes commandes ».
+              La boutique a été notifiée. Vous pouvez suivre votre commande dans « Mes commandes ».
             </p>
             {payment === "orange_money" && (
               <div className="rounded-lg border bg-warning/10 p-3 text-left text-sm">
@@ -221,7 +266,7 @@ function OrderDialog({ dish, restaurantName, restaurantId, onClose }:
               <Field label="Adresse de livraison (Labé) *" error={errors.address}>
                 <Input value={address} onChange={e => setAddress(e.target.value)} placeholder="Quartier, repère…" />
               </Field>
-              <Field label="Note pour le restaurant (optionnel)" error={errors.notes}>
+              <Field label="Note pour la boutique (optionnel)" error={errors.notes}>
                 <Textarea value={notes} onChange={e => setNotes(e.target.value)} rows={2} placeholder="Sans piment, bien cuit…" />
               </Field>
               {settings.zonesLivraison.length > 0 && (
